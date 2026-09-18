@@ -3,6 +3,7 @@ import jwt from "jsonwebtoken";
 import "dotenv/config";
 import cookieParser from "cookie-parser";
 import bcyrpt from "bcrypt";
+import { sendRegistrationEmail } from "../services/email.service.js";
 
 /* userRegisterController*/
 async function userRegisterController(req, res) {
@@ -39,6 +40,7 @@ async function userRegisterController(req, res) {
     },
     token,
   });
+  await sendRegistrationEmail(user.email, user.name);
 }
 
 /*userLoginController*/
