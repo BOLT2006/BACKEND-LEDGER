@@ -4,6 +4,7 @@ import "dotenv/config";
 import cookieParser from "cookie-parser";
 import bcyrpt from "bcrypt";
 import { sendRegistrationEmail } from "../services/email.service.js";
+import { TokenBlacklist } from "../models/blackList.model.js";
 
 /* userRegisterController*/
 async function userRegisterController(req, res) {
@@ -79,4 +80,26 @@ async function userLoginController(req, res) {
     token,
   });
 }
-export { userRegisterController ,userLoginController };
+
+/* userLogoutController */
+async function userLogoutController(req, res) {
+  const token = req.cookies.token || req.headers.authorization?.split(" ")[1];
+
+  if (!token) {
+    return res.status(200).json({
+      message: "User logout successfully",
+    });
+
+  }
+
+    // If token is present, add it to the blacklist
+
+    await TokenBlacklist.create({ token : token });
+
+    res.clearCookie("token");
+
+    res.status(200).json({
+      message: "User logout successfully",
+    });
+  }
+export { userRegisterController ,userLoginController ,userLogoutController };

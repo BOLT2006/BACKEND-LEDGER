@@ -1,6 +1,7 @@
 import { User } from "../models/user.model.js";
 import jwt from "jsonwebtoken";
 import "dotenv/config";
+import TokenBlacklist from "../models/blackList.model.js";
 
 async function authmiddleware(req, res, next) {
 
@@ -14,6 +15,15 @@ async function authmiddleware(req, res, next) {
         return res.status(401).json({
             success: false,
             message: "Unauthorized access, token is missing"
+        });
+    }
+
+    // Check if token is blacklisted
+    const isTokenBlacklisted = await TokenBlacklist.findOne({ token });
+    if (isTokenBlacklisted) {
+        return res.status(401).json({
+            success: false,
+            message: "Unauthorized access, token is blacklisted"
         });
     }
 
@@ -62,6 +72,15 @@ async function authSystemUserMiddleware(req, res, next) {
         return res.status(401).json({
             success: false,
             message: "Unauthorized access, token is missing"
+        });
+    }
+
+    // Check if token is blacklisted
+    const isTokenBlacklisted = await TokenBlacklist.findOne({ token });
+    if (isTokenBlacklisted) {
+        return res.status(401).json({
+            success: false,
+            message: "Unauthorized access, token is blacklisted"
         });
     }
 
