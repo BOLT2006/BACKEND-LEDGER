@@ -2,6 +2,8 @@ import Account from "../models/account.model.js";
 import Transaction from "../models/transaction.model.js";
 import Ledger from "../models/ledger.model.js";
 import mongoose from "mongoose";
+import { sendTransactionEmail, sendTransactionFailureEmail } from "../services/email.service.js";
+import {authmiddleware} from "../middleware/auth.middleware.js";
 
 /* Create a new transaction */
 // 10 Steps to create a new transaction
@@ -79,4 +81,50 @@ async function createTransaction(req , res) {
         //create session for transaction
         const session = await mongoose.startSession();
         session.startTransaction();
+
+        // create transaction
+        const transaction = new Transaction({
+            fromAccount,
+            toAccount,
+            amount,
+            idempotencyKey,
+            status: "PENDING"
+        } , { session });
+
+        // debit leder entry
+        const debitLedgerEntry = await Ledger.create({
+            account: fromAccount,
+            transaction: transaction._id,
+            type: "DEBIT",
+        } , { session });
+
+        // credit ledger entry
+        const creditLedgerEntry = await Ledger.create({
+            account: toAccount,
+            transaction: transaction._id,
+            type: "CREDIT",
+        } , { session });
+
+        // mark transaction as COMPLETED
+        transaction.status = "COMPLETED";
+        await transaction.save({ session });
+        
+        // commit transaction
+        await session.commitTransaction();
+        await session.endSession();
+
+        /* 10. Send email notification */
+
+        await sendTransactionEmail(
+            req.user.email,
+            req.user.name,
+            amount,
+            toAccount
+        );
+
+        return res.status(201).json({ message: "Transaction completed successfully", transaction: transaction });
+
+
     }
+
+    export { createTransaction };

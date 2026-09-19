@@ -1,8 +1,8 @@
-import express from "express"
-import authmiddleware from "../middleware/auth.middleware.js"
+import express from "express";
+import authmiddleware from "../middleware/auth.middleware.js";
+import { createTransaction } from "../controllers/transaction.controller.js";
+const router = express.Router();
 
-const router = express.Router()
+router.post("/", authmiddleware, createTransaction);
 
-router.post("/" , authmiddleware)
-
-export default router
+export default router;
