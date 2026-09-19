@@ -11,6 +11,9 @@ app.use(express.json())
 
 app.use(cookieParser())
 
+app.get("/" , (req , res) => {
+  res.send("Welcome to the Ledger API")
+})
 app.use("/api/auth", userRoute)
 app.use("/api/accounts", accountRouter)
 app.use("/api/transactions", transactionRouter)
