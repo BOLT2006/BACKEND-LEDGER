@@ -2,6 +2,7 @@ import express from "express"
 import userRoute from "./routes/auth.routes.js"
 import cookieParser from "cookie-parser"
 import accountRouter from "../src/routes/account.routes.js"
+import transactionRouter from "../src/routes/transaction.routes.js"
 
 const app = express()
 
@@ -12,5 +13,6 @@ app.use(cookieParser())
 
 app.use("/api/auth", userRoute)
 app.use("/api/accounts", accountRouter)
+app.use("/api/transactions", transactionRouter)
 
 export default app

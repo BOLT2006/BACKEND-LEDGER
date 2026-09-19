@@ -39,6 +39,7 @@ const sendEmail = async (to, subject, text, html) => {
   }
 };
 
+// Function to send registration email
 async function sendRegistrationEmail(userEmail, name) {
   const subject = "Welcome to Backend Ledger!";
   const text = `Hello ${name},\n\nThank you for registering with Backend Ledger. We're excited to have you on board!\n\nBest regards,\nThe Backend Ledger Team`;
@@ -47,6 +48,7 @@ async function sendRegistrationEmail(userEmail, name) {
   await sendEmail(userEmail, subject, text, html);
 }
 
+// Function to send transaction email
 async function sendTransactionEmail(userEmail, name, amount, toAccount) {
   const subject = "Transaction Notification";
   const text = `Hello ${name},\n\nA transaction of ${amount} has been made to account ${toAccount}.\n\nBest regards,\nThe Backend Ledger Team`;
@@ -54,6 +56,7 @@ async function sendTransactionEmail(userEmail, name, amount, toAccount) {
   await sendEmail(userEmail, subject, text, html);
 }
 
+// Function to send transaction failure email
 async function sendTransactionFailureEmail(userEmail, name, amount, toAccount, ) {
   const subject = "Transaction Failure";
   const text = `Hello ${name},\n\nWe regret to inform you that a transaction of ${amount} to account ${toAccount} has failed.\n\nPlease check your account and try again.\n\nBest regards,\nThe Backend Ledger Team`;

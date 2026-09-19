@@ -22,6 +22,13 @@ const userSchema = new mongoose.Schema({
     required : [true , "Password is required "],
     minlength : [6 , "Password Should conttain more than 6 character"], 
     select : false
+  },
+  // systemUser is a boolean field that indicates whether the user is a system user or not. System users are created by the system and cannot be modified or deleted by regular users. This field is immutable, meaning it cannot be changed after the user is created.
+  systemUser : {
+    type : Boolean,
+    default : false,
+    immutable : true,
+    select : false
   }
 },{timestamps : true});
 
