@@ -1,7 +1,7 @@
 import { User } from "../models/user.model.js";
 import jwt from "jsonwebtoken";
 import "dotenv/config";
-import TokenBlacklist from "../models/blackList.model.js";
+import {TokenBlacklist} from "../models/blackList.model.js";
 
 async function authmiddleware(req, res, next) {
 
